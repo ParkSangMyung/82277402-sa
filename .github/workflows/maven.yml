@@ -1,4 +1,4 @@
-name: github action CI
+name: github action CI Maven
 
 on: workflow_dispatch
 
