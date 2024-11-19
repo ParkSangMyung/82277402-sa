@@ -13,7 +13,7 @@ spec:
         app: 82277402 
     spec:
       containers:
-        - name: 82277402 
+        - name: 82277402
           image: ce82277402acr.azurecr.io/82277402
           ports:
           - containerPort: 8080
