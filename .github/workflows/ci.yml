@@ -3,7 +3,7 @@ name: github action CI
 on: workflow_dispatch
 
 env:
-  IMAGE_NAME: cloud-sample
+  IMAGE_NAME: cloud-assignment
 
 jobs:
   build:
@@ -37,34 +37,28 @@ jobs:
         login-server: ${{ secrets.BASEACR_LOGIN_SERVER  }}
         username: ${{ secrets.REGISTRY_USERNAME }}
         password: ${{ secrets.REGISTRY_PASSWORD }}
-
+    
+    - name: 'Check PWD'
+      run: |
+          echo "`pwd`"
+          
     - name: 'Build & Tag Image'
       run: |
             docker build -t ${{ secrets.BASEACR_LOGIN_SERVER  }}/${{ env.IMAGE_NAME }}:${{ steps.gen-version.outputs.VERSION }} -f Dockerfile-maven .
-            docker tag ${{ secrets.BASEACR_LOGIN_SERVER  }}/${{ env.IMAGE_NAME }}:${{ steps.gen-version.outputs.VERSION }} ${{ secrets.STAPACR_LOGIN_SERVER  }}/${{ env.IMAGE_NAME }}:${{ steps.gen-version.outputs.VERSION }}
+            docker tag ${{ secrets.BASEACR_LOGIN_SERVER  }}/${{ env.IMAGE_NAME }}:${{ steps.gen-version.outputs.VERSION }} ${{ secrets.MY_ACR_LOGIN_SERVER  }}/${{ env.IMAGE_NAME }}:${{ steps.gen-version.outputs.VERSION }}
+
+    - name: Verify Docker Image
+      run: |
+          docker images
     
-    - name: 'Push image'
+    - name: 'MY_ACR login'
       uses: azure/docker-login@v1
       with:
-        login-server: ${{ secrets.STAPACR_LOGIN_SERVER  }}
-        username: ${{ secrets.REGISTRY_USERNAME }}
-        password: ${{ secrets.REGISTRY_PASSWORD }}
+        login-server: ${{ secrets.MY_ACR_LOGIN_SERVER  }}
+        username: ${{ secrets.MY_REGISTRY_USERNAME }}
+        password: ${{ secrets.MY_REGISTRY_PASSWORD }}
     
-    - run: |
-          docker push ${{ secrets.STAPACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ steps.gen-version.outputs.VERSION }}
-    
-    - name: Update Kubernetes resources
+    - name: 'Push image'
       run: |
-          echo "`ls`"
-          cd manifests/overlays/prod
-          kustomize edit set image ${{ secrets.STAPACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ steps.gen-version.outputs.VERSION }}
-          cat kustomization.yaml
+          docker push ${{ secrets.MY_ACR_LOGIN_SERVER }}/${{ env.IMAGE_NAME }}:${{ steps.gen-version.outputs.VERSION }}
     
-    - name: Commit files
-      run: |
-          cd manifests
-          echo "`ls`"
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "github-actions"
-          git commit -am "Update image tag"
-          git push -u origin main
