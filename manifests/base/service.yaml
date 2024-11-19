@@ -4,6 +4,6 @@ metadata:
     name: my-82277402
 spec:
     ports:
-    - port: 8080 
+    - port: 8080
     selector:
         app: 82277402
