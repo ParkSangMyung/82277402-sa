@@ -86,6 +86,11 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+		                    <image>
+		                        <name>cepgstapacr.azurecr.io/cloudsample</name>
+		                    </image>
+                		</configuration>
 			</plugin>
 			 <plugin>
                 <groupId>org.springframework.boot</groupId>
