@@ -107,4 +107,20 @@
 		</plugins>
 	</build>
 
+	<repositories>
+		<!-- lib import용 repo 설정 -->
+		<repository>
+			<id>github</id>
+			<url>https://maven.pkg.github.com/ParkSangMyung/82277402-sa</url>
+		</repository>
+	</repositories>
+
+	<distributionManagement>
+		<!-- package publish용 repo 설정 -->
+		<repository>
+			<id>github</id>
+			<name>GitHub ParkSangMyung Apache Maven Packages</name>
+			<url>https://maven.pkg.github.com/ParkSangMyung/82277402-sa</url>
+		</repository>
+	</distributionManagement>
 </project>
